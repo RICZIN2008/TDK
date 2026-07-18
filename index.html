@@ -1,232 +1,749 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HACKERFLIX</title>
+
+<title>TroopDark</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-  :root { --green: #00ff41; --bg: #010a01; --card: #021102; }
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Consolas', monospace; }
-  body { background: var(--bg); color: var(--green); }
-  header { background: var(--card); border-bottom: 2px solid var(--green); padding: 12px; text-align: center; position: sticky; top: 0; z-index: 10; }
-  header h1 { font-size: 18px; text-shadow: 0 0 10px var(--green); }
-  nav { display: flex; justify-content: center; gap: 10px; padding: 10px; background: var(--card); border-bottom: 1px solid #003b00; }
-  nav button { background: transparent; border: 1px solid var(--green); color: var(--green); padding: 6px 14px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 12px; }
-  nav button.active, nav button:hover { background: var(--green); color: #000; }
-.container { padding: 15px; width: 100%; margin: auto; }
-.categoria { display: none; grid-template-columns: repeat(3, 1fr); gap: 15px; width: 100%; }
-.categoria.active { display: grid; }
-.card { background: var(--card); border: 1px solid #003b00; border-radius: 5px; overflow: hidden; cursor: pointer; transition: transform 0.2s; min-width: 0; }
-.card:hover { border-color: var(--green); transform: scale(1.03); }
-.card img { width: 100%; height: 280px; object-fit: cover; background: #000; display: block; }
-.card h3 { padding: 10px; font-size: 13px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: #000; border-top: 1px solid #003b00; pointer-events: none; }
 
-/* PLAYER AGORA É 100% */
-  #player { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; justify-content: center; align-items: center; z-index: 1000; }
-
-/* WRAPPER PREENCHE TUDO */
-  #videoWrapper { width: 100%; height: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
-
-/* IFRAME COM BORDA VERDE E 100% */
-  iframe {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    border: 2px solid var(--green); /* BEIRADAS VERDES AQUI */
-    display: block;
-    aspect-ratio: unset; /* Tirei pra preencher 100% */
-  }
-.loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--green); font-size: 14px; z-index: 1001; }
-
-.btn-voltar {
-  position: fixed; /* MUDEI PRA FIXED PRA NÃO ENCOLHER */
-  top: 15px;
-  left: 15px;
-  background: rgba(0,255,65,0.95);
-  border: 2px solid #000;
-  color: #000;
-  width: 45px;
-  height: 45px;
-  border-radius: 8px;
-  font-size: 24px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 1002;
-  display: none;
-  align-items: center;
-  justify-content: center;
+body{
+margin:0;
+padding:0;
+font-family:Arial,sans-serif;
+background:url('https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/wallpaper.gif');
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+background-attachment:fixed;
+min-height:100vh;
+overflow-x:hidden;
+transition:background .4s;
 }
-.btn-voltar:hover { background: var(--green); transform: scale(1.1); }
 
-.btn-expandir {
-  position: fixed; /* MUDEI PRA FIXED PRA NÃO ENCOLHER */
-  bottom: 15px;
-  right: 15px;
-  width: 45px;
-  height: 45px;
-  background: rgba(0,255,65,0.95);
-  border: 2px solid #000;
-  border-radius: 8px;
-  color: #000;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 1002;
-  display: none;
-}
-.btn-expandir:hover { background: var(--green); transform: scale(1.1); }
+/* HORIZONTAL */
 
-@media(max-width: 900px){.categoria { grid-template-columns: repeat(2, 1fr); } }
-@media(max-width: 500px){.categoria { grid-template-columns: repeat(2, 1fr); }.card img { height: 220px; } }
+@media screen and (orientation:landscape){
 
-/* FULLSCREEN 100% SEM BORDA VERDE */
-#player:fullscreen,
-#player:-webkit-full-screen {
-  width: 100vw!important;
-  height: 100vh!important;
-  padding: 0!important;
-  margin: 0!important;
+body{
+background-size:100% auto;
 }
-#player:fullscreen #videoWrapper,
-#player:-webkit-full-screen #videoWrapper {
-  width: 100vw!important;
-  max-width: 100vw!important;
-  height: 100vh!important;
-  padding: 0!important;
-  margin: 0!important;
+
 }
-#player:fullscreen iframe,
-#player:-webkit-full-screen iframe {
-  width: 100vw!important;
-  height: 100vh!important;
-  border: none!important; /* TIRA A BORDA VERDE NO FULL */
-  aspect-ratio: unset!important;
-  object-fit: cover;
+
+/* PARTÍCULAS */
+
+.snow{
+position:fixed;
+width:4px;
+height:4px;
+background:red;
+border-radius:50%;
+pointer-events:none;
+opacity:.5;
+animation:fall linear infinite;
+z-index:1;
 }
+
+@keyframes fall{
+
+0%{
+transform:translateY(-10px);
+opacity:0;
+}
+
+100%{
+transform:translateY(100vh);
+opacity:1;
+}
+
+}
+
+/* LOGO */
+
+.logo{
+position:absolute;
+top:10px;
+width:100%;
+text-align:center;
+font-size:22px;
+font-weight:900;
+color:red;
+text-shadow:0 0 12px red;
+letter-spacing:2px;
+z-index:10;
+}
+
+/* BOTÕES */
+
+.menu-btn{
+position:fixed;
+left:15px;
+width:52px;
+height:52px;
+border-radius:50%;
+background:rgba(0,0,0,.80);
+color:white;
+border:1px solid rgba(255,255,255,.10);
+font-size:20px;
+z-index:1000;
+transition:.2s;
+backdrop-filter:blur(6px);
+}
+
+.menu-btn:hover{
+background:red;
+transform:scale(1.05);
+}
+
+/* MENU */
+
+#menu{
+position:fixed;
+top:80px;
+left:15px;
+width:290px;
+background:rgba(0,0,0,.88);
+border-radius:22px;
+padding:18px;
+display:none;
+z-index:999;
+backdrop-filter:blur(8px);
+border:1px solid rgba(255,0,0,.25);
+max-height:80vh;
+overflow:auto;
+}
+
+/* TITULOS */
+
+.title{
+font-size:18px;
+font-weight:bold;
+color:red;
+margin-bottom:14px;
+padding-left:5px;
+margin-top:5px;
+}
+
+/* LINKS */
+
+.link{
+display:flex;
+align-items:center;
+gap:10px;
+background:rgba(255,255,255,.05);
+padding:13px;
+border-radius:14px;
+margin-top:8px;
+text-decoration:none;
+color:white;
+font-size:14px;
+transition:.2s;
+}
+
+.link:hover{
+background:red;
+transform:scale(1.02);
+}
+
+/* TEMAS */
+
+#themesPanel{
+position:fixed;
+top:145px;
+left:15px;
+width:300px;
+background:rgba(0,0,0,.88);
+border-radius:22px;
+padding:15px;
+display:none;
+z-index:999;
+border:1px solid rgba(255,0,0,.25);
+backdrop-filter:blur(8px);
+max-height:75vh;
+overflow:auto;
+}
+
+#themesPanel h2{
+color:red;
+font-size:18px;
+margin-bottom:15px;
+font-weight:bold;
+}
+
+.theme-card{
+background:rgba(255,255,255,.03);
+padding:8px;
+border-radius:14px;
+margin-bottom:12px;
+}
+
+.theme-card img{
+width:100%;
+height:110px;
+object-fit:cover;
+border-radius:12px;
+cursor:pointer;
+border:2px solid transparent;
+transition:.2s;
+}
+
+.theme-card img:hover{
+border-color:red;
+transform:scale(1.02);
+}
+
+/* BOTÃO FIXAR */
+
+.save-mini{
+width:90px;
+height:32px;
+margin-top:6px;
+border:none;
+border-radius:8px;
+background:red;
+color:white;
+font-size:12px;
+font-weight:bold;
+cursor:pointer;
+transition:.2s;
+display:block;
+}
+
+.save-mini:hover{
+opacity:.8;
+}
+
+/* RODAPÉ */
+
+.footer{
+position:fixed;
+bottom:10px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:10px;
+z-index:10;
+}
+
+.footer a{
+width:45px;
+height:45px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:14px;
+background:rgba(0,0,0,.75);
+color:white;
+font-size:18px;
+text-decoration:none;
+transition:.2s;
+border:1px solid rgba(255,255,255,.08);
+backdrop-filter:blur(5px);
+}
+
+.footer a:hover{
+background:red;
+transform:scale(1.08);
+}
+
+/* SCROLL */
+
+::-webkit-scrollbar{
+width:5px;
+}
+
+::-webkit-scrollbar-thumb{
+background:red;
+border-radius:10px;
+}
+
 </style>
+
 </head>
+
 <body>
 
-<header><h1>> HACKERFLIX.exe</h1></header>
+<!-- PARTÍCULAS -->
 
-<nav>
-  <button onclick="mostrarCategoria('filmes', this)" class="active">[FILMES]</button>
-  <button onclick="mostrarCategoria('series', this)">[SERIES]</button>
-  <button onclick="mostrarCategoria('animes', this)">[ANIMES]</button>
-</nav>
+<div id="snow"></div>
 
-<div class="container">
-  <div id="filmes" class="categoria active"></div>
-  <div id="series" class="categoria"></div>
-  <div id="animes" class="categoria"></div>
+<!-- LOGO -->
+
+<div class="logo">
+TroopDark
 </div>
 
-<div id="player">
-  <div id="videoWrapper">
-    <div class="loading" id="loading">CARREGANDO...</div>
-    <!-- ADICIONEI SANDBOX PRA TRAVAR REDIRECIONAMENTO -->
-    <iframe
-      id="video"
-      sandbox="allow-scripts allow-same-origin allow-presentation"
-      allowfullscreen
-      allow="autoplay; fullscreen"
-      frameborder="0"
-      referrerpolicy="no-referrer">
-    </iframe>
+<!-- BOTÃO MENU -->
 
-    <button id="btnVoltar" class="btn-voltar" onclick="fecharVideo()">←</button>
-    <button id="btnExpandir" class="btn-expandir" onclick="toggleFullscreen()">[ ]</button>
-  </div>
+<button id="menuButton"
+class="menu-btn"
+style="top:15px;"
+onclick="toggleMenu()">
+
+<i class="fas fa-ellipsis-v"></i>
+
+</button>
+
+<!-- BOTÃO TEMAS -->
+
+<button id="themeButton"
+class="menu-btn"
+style="top:80px;"
+onclick="toggleThemes()">
+
+<i class="fas fa-image"></i>
+
+</button>
+
+<!-- MENU -->
+
+<div id="menu">
+
+<div class="title">
+Consulta
+</div>
+
+<a class="link"
+href="https://consultanumero.abrtelecom.com.br/consultanumero/consulta/consultaSituacaoAtualCtg"
+target="_blank">
+
+<i class="fas fa-phone"></i>
+Número
+
+</a>
+
+<a class="link"
+href="https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp"
+target="_blank">
+
+<i class="fas fa-id-card"></i>
+CPF
+
+</a>
+
+<a class="link"
+href="https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp"
+target="_blank">
+
+<i class="fas fa-building"></i>
+CNPJ
+
+</a>
+
+<a class="link"
+href="https://riczin2008.github.io/IP/"
+target="_blank">
+
+<i class="fas fa-globe"></i>
+IP
+
+</a>
+
+<a class="link"
+href="https://imeicheck.com/pt/consultar-imei"
+target="_blank">
+
+<i class="fas fa-envelope"></i>
+IMEI STATUS 
+
+</a>
+
+<a class="link"
+href="https://imeicheck.com/imei-blacklist-check"
+target="_blank">
+
+<i class="fas fa-envelope"></i>
+IMEI BLACKLIST 
+
+</a>  
+
+<div class="title"
+style="margin-top:22px;">
+Ferramentas
+</div>
+
+<a class="link"
+href="https://calculadora-omega-seven-19.vercel.app/"
+target="_blank">
+
+<i class="fas fa-calculator"></i>
+Calculadora
+
+</a>
+
+<a class="link"
+href="https://rede-blue.vercel.app/"
+target="_blank">
+
+<i class="fas fa-wifi"></i>
+Rede Wi-Fi
+
+</a>
+
+<a class="link"
+href="https://code-studios-theta.vercel.app/"
+target="_blank">
+
+<i class="fas fa-code"></i>
+Code Studio  
+
+</a>
+
+<a class="link"
+href="https://gerador-gmail.vercel.app/"
+target="_blank">
+
+<i class="fas fa-envelope"></i>
+GERADOR EMAIL 
+
+</a>
+
+<a class="link"
+href="https://ofuscador-one.vercel.app/"
+target="_blank">
+
+<i class="fas fa-lock"></i>
+OFUSCADOR
+
+</a>
+
+<a class="link"
+href="https://desofuscador.vercel.app/"
+target="_blank">
+
+<i class="fas fa-lock-open"></i>
+DESOFUSCADOR
+
+</a>
+
+</div>
+
+<!-- TEMAS -->
+
+<div id="themesPanel">
+
+<h2>
+Temas
+</h2>
+
+<div class="theme-card">
+
+<img src="https://github.com/RICZIN2008/Midia/raw/main/giphy.gif"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://github.com/RICZIN2008/Midia/raw/main/giphy.gif')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://raw.githubusercontent.com/RICZIN2008/Midia/refs/heads/main/220195.gif"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://raw.githubusercontent.com/RICZIN2008/Midia/refs/heads/main/220195.gif')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://raw.githubusercontent.com/RICZIN2008/Midia/refs/heads/main/images_1963488e860.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://raw.githubusercontent.com/RICZIN2008/Midia/refs/heads/main/images_1963488e860.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/qagtwj.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/qagtwj.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/0enti3.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/0enti3.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/z67whn.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/z67whn.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/kogeh5.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/kogeh5.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/vynfjd.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/vynfjd.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/9g9xme.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/9g9xme.jpeg')">
+
+Fixar
+
+</button>
+
+</div>
+
+<div class="theme-card">
+
+<img src="https://files.catbox.moe/3tvjpa.jpeg"
+onclick="changeTheme(this.src)">
+
+<button class="save-mini"
+onclick="saveTheme('https://files.catbox.moe/3tvjpa.jpeg')">
+
+Fixar  
+  
+</button>
+
+</div>
+
+</div>
+
+<!-- RODAPÉ -->
+
+<div class="footer">
+
+<a href="https://www.instagram.com/ric_zin_7"
+target="_blank">
+
+<i class="fab fa-instagram"></i>
+
+</a>
+
+<a href="https://www.youtube.com/@RicZin-7"
+target="_blank">
+
+<i class="fab fa-youtube"></i>
+
+</a>
+
+<a href="mailto:troop.dark00000@gmail.com">
+
+<i class="fas fa-envelope"></i>
+
+</a>
+
+<a href="https://whatsapp.com/channel/0029Vb7ZerTBqbr5oNdmst01"
+
+<i class="fab fa-whatsapp"></i>
+
+</a>
+
+<a href="https://tlk.io/tdk"
+target="_blank">
+
+<i class="fas fa-comments"></i>
+
+</a>
+
+<a href="https://sistema-info-eta.vercel.app/"
+target="_blank">
+
+<i class="fas fa-robot"></i>
+
+</a>
+
 </div>
 
 <script>
-  const videos = {
-    filmes: [
-      {id: 'V6VPMJ77vgSKr7z', nome: 'MÁQUINA DE GUERRA 2026', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/IMG-20260716-WA0005.png'},
-      {id: '0BQKmpzWWbHb972', nome: 'Como Mágica', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/images%20(21).jpeg'},
-      {id: '3xdbv6m1lWuddxV', nome: 'Super Mario Galaxy', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/smg-home-header-mobile.png'},
-      {id: 'g9gWA61gm3sqD8q', nome: 'Homem-Aranha', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/hhRD5m-w4L7Gje7FgahvaeKS5NLEYJVDSQsmbNqvmi-L51PlpyVJnGr6M3siA5LIn9r4ry0wVQsBHxRJXAc.png'},
-      {id: 'lkMMBoqZlgc7YX6', nome: 'Michael', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/IMG-20260716-WA0002.jpg'},
-      {id: '2kr27ed2WpIZ0q1', nome: 'Oppenheimer', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/IMG-20260716-WA0037.jpg'},
-      {id: 'kPBgWMO1xjtOVpw', nome: 'Devoradores de Estrelas', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/0051bc7965f851f46f856d4119741487.jpeg'},
-    ],
-    series: [],
-    animes: []
-  };
 
-  let carregando = false;
+/* TEMA SALVO */
 
-  function carregarVideos() {
-    for(let cat in videos){
-      const container = document.getElementById(cat);
-      let html = '';
-      videos[cat].forEach(v => {
-        html += `<div class="card" data-id="${v.id}"><img src="${v.capa}" loading="lazy" onerror="this.src='https://placehold.co/300x400/003b00/00ff41?text=SEM+CAPA'"><h3>${v.nome}</h3></div>`;
-      });
-      container.innerHTML = html;
-    }
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('click', function(){
-        abrirVideo(this.dataset.id);
-      });
-    });
-  }
+const savedTheme =
+localStorage.getItem("troopdark_theme");
 
-  function mostrarCategoria(id, btn) {
-    document.querySelectorAll('.categoria').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    btn.classList.add('active');
-  }
+if(savedTheme){
 
-  function abrirVideo(fileid) {
-    if(carregando) return;
-    carregando = true;
-    document.getElementById('player').style.display = 'flex';
-    document.getElementById('btnExpandir').style.display = 'flex';
-    document.getElementById('btnVoltar').style.display = 'flex';
-    document.getElementById('loading').style.display = 'block';
-    const iframe = document.getElementById('video');
-    iframe.src = '';
-    setTimeout(() => {
-      iframe.src = `https://stape.me/e/${fileid}`;
-      iframe.onload = () => {
-        document.getElementById('loading').style.display = 'none';
-        carregando = false;
-      }
-    }, 200);
-  }
+document.body.style.backgroundImage =
+`url('${savedTheme}')`;
 
-  // BLOQUEIA REDIRECIONAMENTO AUTOMÁTICO
-  window.addEventListener('beforeunload', function (e) {
-    if(document.getElementById('player').style.display === 'flex'){
-      e.preventDefault();
-      e.returnValue = '';
-    }
-  });
+}
 
-  function toggleFullscreen(){
-    const player = document.getElementById('player');
-    const btnVoltar = document.getElementById('btnVoltar');
+/* MENU */
 
-    if(!document.fullscreenElement){
-      player.requestFullscreen();
-      btnVoltar.style.display = 'none';
-    } else {
-      document.exitFullscreen();
-      btnVoltar.style.display = 'flex';
-    }
-  }
+function toggleMenu(){
 
-  function fecharVideo() {
-    if(document.exitFullscreen) document.exitFullscreen();
-    document.getElementById('player').style.display = 'none';
-    document.getElementById('video').src = '';
-    document.getElementById('loading').style.display = 'none';
-    carregando = false;
-  }
+const menu =
+document.getElementById("menu");
 
-  window.addEventListener('load', carregarVideos);
+const themes =
+document.getElementById("themesPanel");
+
+const themeBtn =
+document.getElementById("themeButton");
+
+if(menu.style.display === "block"){
+
+menu.style.display = "none";
+
+themeBtn.style.display = "block";
+
+}else{
+
+menu.style.display = "block";
+
+themes.style.display = "none";
+
+themeBtn.style.display = "none";
+
+}
+
+}
+
+/* TEMAS */
+
+function toggleThemes(){
+
+const menu =
+document.getElementById("menu");
+
+const panel =
+document.getElementById("themesPanel");
+
+const menuBtn =
+document.getElementById("menuButton");
+
+if(panel.style.display === "block"){
+
+panel.style.display = "none";
+
+menuBtn.style.display = "block";
+
+}else{
+
+panel.style.display = "block";
+
+menu.style.display = "none";
+
+menuBtn.style.display = "none";
+
+}
+
+}
+
+/* TROCAR FUNDO */
+
+function changeTheme(url){
+
+document.body.style.backgroundImage =
+`url('${url}')`;
+
+}
+
+/* FIXAR FUNDO */
+
+function saveTheme(url){
+
+localStorage.setItem(
+"troopdark_theme",
+url
+);
+
+alert("Tema fixado.");
+
+}
+
+/* PARTÍCULAS */
+
+const snow =
+document.getElementById("snow");
+
+for(let i=0;i<70;i++){
+
+const s =
+document.createElement("div");
+
+s.className = "snow";
+
+s.style.left =
+Math.random()*100+"%";
+
+s.style.animationDuration =
+(5+Math.random()*5)+"s";
+
+s.style.animationDelay =
+Math.random()*5+"s";
+
+snow.appendChild(s);
+
+}
+
 </script>
 
 </body>
