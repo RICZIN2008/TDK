@@ -7,7 +7,7 @@
 <style>
   :root { --green: #00ff41; --bg: #010a01; --card: #021102; }
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Consolas', monospace; }
-  body { background: var(--bg); color: var(--green); overflow-x: hidden; }
+  body { background: var(--bg); color: var(--green); }
   header { background: var(--card); border-bottom: 2px solid var(--green); padding: 12px; text-align: center; position: sticky; top: 0; z-index: 10; }
   header h1 { font-size: 18px; text-shadow: 0 0 10px var(--green); }
   nav { display: flex; justify-content: center; gap: 10px; padding: 10px; background: var(--card); border-bottom: 1px solid #003b00; }
@@ -19,38 +19,90 @@
 .card { background: var(--card); border: 1px solid #003b00; border-radius: 5px; overflow: hidden; cursor: pointer; transition: transform 0.2s; min-width: 0; }
 .card:hover { border-color: var(--green); transform: scale(1.03); }
 .card img { width: 100%; height: 280px; object-fit: cover; background: #000; display: block; }
-.card h3 { padding: 10px; font-size: 13px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: #000; border-top: 1px solid #003b00; }
+.card h3 { padding: 10px; font-size: 13px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: #000; border-top: 1px solid #003b00; pointer-events: none; }
 
-/* PLAYER 100% TELA */
+/* PLAYER AGORA É 100% */
   #player { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; justify-content: center; align-items: center; z-index: 1000; }
+
+/* WRAPPER PREENCHE TUDO */
   #videoWrapper { width: 100%; height: 100%; position: relative; display: flex; justify-content: center; align-items: center; }
 
-/* IFRAME COM BORDA VERDE E PREENCHENDO TUDO */
+/* IFRAME COM BORDA VERDE E 100% */
   iframe {
     width: 100%;
     height: 100%;
     background: #000;
-    border: 2px solid var(--green); /* AS BEIRADAS VERDES AQUI */
+    border: 2px solid var(--green); /* BEIRADAS VERDES AQUI */
     display: block;
+    aspect-ratio: unset; /* Tirei pra preencher 100% */
   }
 .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--green); font-size: 14px; z-index: 1001; }
 
-/* BOTÕES GRANDES POR CIMA DO IFRAME */
-.btn-voltar { position: fixed; top: 15px; left: 15px; background: rgba(0,255,65,0.95); border: 2px solid #000; color: #000; width: 45px; height: 45px; border-radius: 8px; font-size: 24px; font-weight: bold; cursor: pointer; z-index: 1002; display: none; align-items: center; justify-content: center; }
+.btn-voltar {
+  position: fixed; /* MUDEI PRA FIXED PRA NÃO ENCOLHER */
+  top: 15px;
+  left: 15px;
+  background: rgba(0,255,65,0.95);
+  border: 2px solid #000;
+  color: #000;
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1002;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
 .btn-voltar:hover { background: var(--green); transform: scale(1.1); }
-.btn-expandir { position: fixed; bottom: 15px; right: 15px; width: 45px; height: 45px; background: rgba(0,255,65,0.95); border: 2px solid #000; border-radius: 8px; color: #000; font-size: 22px; font-weight: bold; cursor: pointer; z-index: 1002; display: none; }
-.btn-expandir:hover { background: var(--green); transform: scale(1.1); }
 
-/* TELA DE DETALHES */
-#telaDetalhes { display: none; padding: 20px; max-width: 900px; margin: 0 auto; background: var(--bg); }
-#capaDetalhe { width: 100%; max-height: 450px; object-fit: cover; border: 2px solid var(--green); margin-bottom: 15px; border-radius: 5px; }
-#tituloDetalhe { text-align: center; font-size: 22px; margin-bottom: 15px; text-shadow: 0 0 5px var(--green); }
-#listaEpisodios { display: grid; gap: 8px; }
-.ep,.btn-assistir { background: var(--card); border: 1px solid #003b00; padding: 14px; cursor: pointer; text-align: center; transition: 0.2s; border-radius: 4px; font-weight: bold; font-size: 16px; }
-.ep:hover,.btn-assistir:hover { background: var(--green); color: #000; border-color: var(--green); }
+.btn-expandir {
+  position: fixed; /* MUDEI PRA FIXED PRA NÃO ENCOLHER */
+  bottom: 15px;
+  right: 15px;
+  width: 45px;
+  height: 45px;
+  background: rgba(0,255,65,0.95);
+  border: 2px solid #000;
+  border-radius: 8px;
+  color: #000;
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1002;
+  display: none;
+}
+.btn-expandir:hover { background: var(--green); transform: scale(1.1); }
 
 @media(max-width: 900px){.categoria { grid-template-columns: repeat(2, 1fr); } }
 @media(max-width: 500px){.categoria { grid-template-columns: repeat(2, 1fr); }.card img { height: 220px; } }
+
+/* FULLSCREEN 100% SEM BORDA VERDE */
+#player:fullscreen,
+#player:-webkit-full-screen {
+  width: 100vw!important;
+  height: 100vh!important;
+  padding: 0!important;
+  margin: 0!important;
+}
+#player:fullscreen #videoWrapper,
+#player:-webkit-full-screen #videoWrapper {
+  width: 100vw!important;
+  max-width: 100vw!important;
+  height: 100vh!important;
+  padding: 0!important;
+  margin: 0!important;
+}
+#player:fullscreen iframe,
+#player:-webkit-full-screen iframe {
+  width: 100vw!important;
+  height: 100vh!important;
+  border: none!important; /* TIRA A BORDA VERDE NO FULL */
+  aspect-ratio: unset!important;
+  object-fit: cover;
+}
 </style>
 </head>
 <body>
@@ -69,24 +121,19 @@
   <div id="animes" class="categoria"></div>
 </div>
 
-<div id="telaDetalhes">
-  <button onclick="voltarCategorias()" style="background:var(--green);color:#000;border:none;padding:8px 15px;margin-bottom:15px;cursor:pointer;border-radius:4px;font-weight:bold;">← VOLTAR</button>
-  <h2 id="tituloDetalhe"></h2>
-  <img id="capaDetalhe" src="">
-  <div id="listaEpisodios"></div>
-</div>
-
 <div id="player">
   <div id="videoWrapper">
     <div class="loading" id="loading">CARREGANDO...</div>
-    <!-- SANDBOX TRAVA REDIRECIONAMENTO E POPUP -->
-    <iframe id="video"
+    <!-- ADICIONEI SANDBOX PRA TRAVAR REDIRECIONAMENTO -->
+    <iframe
+      id="video"
       sandbox="allow-scripts allow-same-origin allow-presentation"
       allowfullscreen
       allow="autoplay; fullscreen"
       frameborder="0"
       referrerpolicy="no-referrer">
     </iframe>
+
     <button id="btnVoltar" class="btn-voltar" onclick="fecharVideo()">←</button>
     <button id="btnExpandir" class="btn-expandir" onclick="toggleFullscreen()">[ ]</button>
   </div>
@@ -103,14 +150,8 @@
       {id: '2kr27ed2WpIZ0q1', nome: 'Oppenheimer', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/IMG-20260716-WA0037.jpg'},
       {id: 'kPBgWMO1xjtOVpw', nome: 'Devoradores de Estrelas', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/0051bc7965f851f46f856d4119741487.jpeg'},
     ],
-    series: [
-      {nome: 'MÁQUINA DE GUERRA 2026', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/IMG-20260716-WA0005.png', episodios: [{id: 'V6VPMJ77vgSKr7z', nome: 'Episódio 1'},{id: '0BQKmpzWWbHb972', nome: 'Episódio 2'}]},
-      {nome: 'Homem-Aranha', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/hhRD5m-w4L7Gje7FgahvaeKS5NLEYJVDSQsmbNqvmi-L51PlpyVJnGr6M3siA5LIn9r4ry0wVQsBHxRJXAc.png', episodios: [{id: 'g9gWA61gm3sqD8q', nome: 'Episódio 1'},{id: 'lkMMBoqZlgc7YX6', nome: 'Episódio 2'}]}
-    ],
-    animes: [
-      {nome: 'Oppenheimer', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/IMG-20260716-WA0037.jpg', episodios: [{id: '2kr27ed2WpIZ0q1', nome: 'Episódio 1'},{id: 'kPBgWMO1xjtOVpw', nome: 'Episódio 2'}]},
-      {nome: 'Super Mario Galaxy', capa: 'https://raw.githubusercontent.com/RICZIN2008/Imagens/refs/heads/main/smg-home-header-mobile.png', episodios: [{id: '3xdbv6m1lWuddxV', nome: 'Episódio 1'},{id: 'V6VPMJ77vgSKr7z', nome: 'Episódio 2'}]}
-    ]
+    series: [],
+    animes: []
   };
 
   let carregando = false;
@@ -119,38 +160,23 @@
     for(let cat in videos){
       const container = document.getElementById(cat);
       let html = '';
-      videos[cat].forEach((v, index) => {
-        html += `<div class="card" onclick="abrirDetalhes('${cat}', ${index})"><img src="${v.capa}" loading="lazy" onerror="this.src='https://placehold.co/300x400/003b00/00ff41?text=SEM+CAPA'"><h3>${v.nome}</h3></div>`;
+      videos[cat].forEach(v => {
+        html += `<div class="card" data-id="${v.id}"><img src="${v.capa}" loading="lazy" onerror="this.src='https://placehold.co/300x400/003b00/00ff41?text=SEM+CAPA'"><h3>${v.nome}</h3></div>`;
       });
       container.innerHTML = html;
     }
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', function(){
+        abrirVideo(this.dataset.id);
+      });
+    });
   }
 
   function mostrarCategoria(id, btn) {
     document.querySelectorAll('.categoria').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    document.getElementById('telaDetalhes').style.display = 'none';
-    document.getElementById('player').style.display = 'none';
-    document.querySelector('.container').style.display = 'block';
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
-  }
-
-  function abrirDetalhes(cat, index) {
-    const item = videos[cat][index];
-    document.querySelector('.container').style.display = 'none';
-    document.getElementById('telaDetalhes').style.display = 'block';
-    document.getElementById('tituloDetalhe').innerText = item.nome;
-    document.getElementById('capaDetalhe').src = item.capa;
-    let html = '';
-    if(cat === 'filmes'){
-      html = `<div class="btn-assistir" onclick="abrirVideo('${item.id}')">▶ ASSISTIR AGORA</div>`;
-    } else {
-      item.episodios.forEach((ep, i) => {
-        html += `<div class="ep" onclick="abrirVideo('${ep.id}')">${ep.nome}</div>`;
-      });
-    }
-    document.getElementById('listaEpisodios').innerHTML = html;
   }
 
   function abrirVideo(fileid) {
@@ -171,7 +197,7 @@
     }, 200);
   }
 
-  // TRAVA REDIRECIONAMENTO AUTOMÁTICO
+  // BLOQUEIA REDIRECIONAMENTO AUTOMÁTICO
   window.addEventListener('beforeunload', function (e) {
     if(document.getElementById('player').style.display === 'flex'){
       e.preventDefault();
@@ -182,6 +208,7 @@
   function toggleFullscreen(){
     const player = document.getElementById('player');
     const btnVoltar = document.getElementById('btnVoltar');
+
     if(!document.fullscreenElement){
       player.requestFullscreen();
       btnVoltar.style.display = 'none';
@@ -197,11 +224,6 @@
     document.getElementById('video').src = '';
     document.getElementById('loading').style.display = 'none';
     carregando = false;
-  }
-
-  function voltarCategorias(){
-    document.getElementById('telaDetalhes').style.display = 'none';
-    document.querySelector('.container').style.display = 'block';
   }
 
   window.addEventListener('load', carregarVideos);
